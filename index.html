@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <style>
+      body {
+        padding: 0;
+        margin:0;
+      }
+
+      #frame {
+        width:100%;
+        height:100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      video {
+        position: absolute;
+        transform-origin: top left;
+        transform:scale(2);
+      }
+    </style>
+
+    <script>
+      var host = location.origin.replace(/^http/, 'ws');
+      var ws = new WebSocket(host);
+      var state = {
+        id:null,
+        top:0,
+        left:0,
+        rotation:'90deg',
+        scale:2
+      };
+      ws.onmessage = function (event) {
+        var data = JSON.parse(event.data);
+        if (data.newId) {
+          state.id = data.newId;
+        } else if (data.deviceId == state.id && data.changes) {
+          var element = document.querySelector('video');
+          if (data.changes.position) {
+            element.style.top = data.changes.position.top;
+            element.style.left = data.changes.position.left;
+          }
+          if (data.changes.rotation) {
+            var rotation = data.changes.rotation;
+            var parent = document.getElementById('video-container');
+//            element.style.transform = 'rotate(' + data.changes.rotation + ')';
+            parent.style.transform = 'rotate(' + data.changes.rotation + ')';
+            element.style.transform = 'scale(' + state.scale + ') translate3d('+ Math.sin(parseInt(rotation))*100 +'%,'+ Math.cos(parseInt(rotation))*100 +'%,0)';
+          }
+        } else if (data == 'reset') {
+          document.querySelector('video').currentTime = 0;
+        } else if (data == 'pause') {
+          document.querySelector('video').pause();
+        } else if (data == 'resume') {
+          document.querySelector('video').play();
+        }
+      };
+      ws.onopen = function(event) {
+        ws.send(JSON.stringify({initialValues:{height: window.innerHeight, width: window.innerWidth}}))
+      }
+    </script>
+  </head>
+  <body>
+    <div id="frame">
+      <div id="video-container">
+        <video src="SampleVideo.mp4" muted autoplay loop></video>
+      </div>
+    </div>
+  </body>
+</html>

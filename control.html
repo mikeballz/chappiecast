@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Websocket Video Multicast</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css">
+    <link rel="stylesheet" href="bower_components/jquery-ui-rotatable/jquery.ui.rotatable.css">
+
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="bower_components/jquery-ui-rotatable/jquery.ui.rotatable.min.js"></script>
+    <script type="text/javascript" src="control.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <button onclick="resetVideos()">Reset Video</button>
+        <button onclick="pause()">Pause Video</button>
+        <button onclick="resume()">Resume Video</button>
+        <div class="video-frame">
+        </div>
+    </div>
+
+</body>
+</html>
