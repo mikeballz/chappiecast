@@ -36,7 +36,7 @@
         var data = JSON.parse(event.data);
         if (data.newId) {
           state.id = data.newId;
-        } else if (data.deviceId == state.id && data.changes) {
+        } else if ((data.deviceId == state.id || data.deviceId =='all' ) && data.changes) {
           var element = document.querySelector('video');
           if (data.changes.position) {
             state.top = element.style.top = data.changes.position.top;
@@ -49,6 +49,10 @@
             var originX = ( state.left + (state.width / 2) * state.scale) + 'px';
             parent.style.transformOrigin = [originX, originY, 0].join(' ');
             parent.style.transform = 'rotate(' + rotation + ')';
+          }
+          if (data.changes.scale) {
+            var scale = state.scale = data.changes.scale;
+            element.style.transform = 'scale(' + scale + ')';
           }
         } else if (data == 'reset') {
           document.querySelector('video').currentTime = 0;

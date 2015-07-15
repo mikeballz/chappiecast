@@ -1,11 +1,22 @@
 $(function(){
-    $('.video-frame').resizable({aspectRatio: true});
-    $('.device').draggable({containment: 'parent'}).rotatable();
-
     var host = location.origin.replace(/^http/, 'ws');
     var ws = new WebSocket(host + '/control');
     var devices = [];
     var scale = 2;
+
+    $('.video-frame').resizable({
+        aspectRatio: true,
+        stop: function(event, ui) {
+            var ratio = (ui.size.width / ui.originalSize.width) * scale;
+            scale = ratio;
+            ws.send(JSON.stringify({
+                deviceId: 'all',
+                changes: {
+                    scale: ratio
+                }
+            }))
+        }
+    });
 
     ws.onmessage = function(event) {
         var data = JSON.parse(event.data);
