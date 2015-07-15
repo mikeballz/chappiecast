@@ -17,14 +17,14 @@ server.listen(port);
 
 console.log("http server listening on %d", port);
 
-var wss = new WebSocketServer({server: server, path: '/'});
-var control = new WebSocketServer({server: server, path: '/control'});
+var deviceSocket = new WebSocketServer({server: server, path: '/'});
+var controlSocket = new WebSocketServer({server: server, path: '/control'});
 console.log("websocket server created");
 
 var devices = [];
 var uids = 1;
 
-wss.on("connection", function(ws) {
+deviceSocket.on("connection", function(ws) {
   console.log("websocket connection open");
   var socketId = uids++;
 
@@ -47,10 +47,10 @@ wss.on("connection", function(ws) {
 });
 
 function broadcastToDevices(text) {
-  wss.broadcast(JSON.stringify(text));
+  deviceSocket.broadcast(JSON.stringify(text));
 }
 
-control.on('connection', function(ws){
+controlSocket.on('connection', function(ws){
   console.log("control websocket connection open");
   ws.send(JSON.stringify({devices: devices}));
 

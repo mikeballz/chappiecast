@@ -27,8 +27,10 @@
         id:null,
         top:0,
         left:0,
-        rotation:'90deg',
-        scale:2
+        rotation:'0rad',
+        scale:2,
+        width: window.innerWidth,
+        height: window.innerHeight
       };
       ws.onmessage = function (event) {
         var data = JSON.parse(event.data);
@@ -37,15 +39,16 @@
         } else if (data.deviceId == state.id && data.changes) {
           var element = document.querySelector('video');
           if (data.changes.position) {
-            element.style.top = data.changes.position.top;
-            element.style.left = data.changes.position.left;
+            state.top = element.style.top = data.changes.position.top;
+            state.top = element.style.left = data.changes.position.left;
           }
           if (data.changes.rotation) {
-            var rotation = data.changes.rotation;
+            var rotation = state.rotation = data.changes.rotation;
             var parent = document.getElementById('video-container');
-//            element.style.transform = 'rotate(' + data.changes.rotation + ')';
-            parent.style.transform = 'rotate(' + data.changes.rotation + ')';
-            element.style.transform = 'scale(' + state.scale + ') translate3d('+ Math.sin(parseInt(rotation))*100 +'%,'+ Math.cos(parseInt(rotation))*100 +'%,0)';
+            var originY = ( state.top + (state.height / 2)  * state.scale) + 'px';
+            var originX = ( state.left + (state.width / 2) * state.scale) + 'px';
+            parent.style.transformOrigin = [originX, originY, 0].join(' ');
+            parent.style.transform = 'rotate(' + rotation + ')';
           }
         } else if (data == 'reset') {
           document.querySelector('video').currentTime = 0;
@@ -56,7 +59,11 @@
         }
       };
       ws.onopen = function(event) {
-        ws.send(JSON.stringify({initialValues:{height: window.innerHeight, width: window.innerWidth}}))
+        send({initialValues:{height: state.height, width: state.width}});
+      };
+
+      function send(data) {
+        ws.send(JSON.stringify(data))
       }
     </script>
   </head>

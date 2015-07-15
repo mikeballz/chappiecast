@@ -15,7 +15,12 @@ $(function(){
                 $('.video-frame').append(newElement);
                 $(newElement)
                     .addClass('device')
-                    .css({height:device.height / scale, width:device.width / scale})
+                    .css({
+                        height:device.height / scale,
+                        width:device.width / scale,
+                        top:device.top,
+                        left:device.left
+                    })
                     .draggable({
                         containment: 'parent',
                         stop: function(event, ui) {
