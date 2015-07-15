@@ -8,7 +8,6 @@ $(function(){
         aspectRatio: true,
         stop: function(event, ui) {
             var ratio = (ui.size.width / ui.originalSize.width) * scale;
-            scale = ratio;
             ws.send(JSON.stringify({
                 deviceId: 'all',
                 changes: {
@@ -29,8 +28,8 @@ $(function(){
                     .css({
                         height:device.height / scale,
                         width:device.width / scale,
-                        top:((-device.position.top || 0) / scale) + 'px',
-                        left:((-device.position.left || 0) / scale) + 'px'
+                        top:(-device.position.top || 0) + 'px',
+                        left:(-device.position.left || 0) + 'px'
                     })
                     .draggable({
                         containment: 'parent',
@@ -39,8 +38,8 @@ $(function(){
                                 deviceId:device.id,
                                 changes:{
                                     position:{
-                                        top: -ui.position.top * scale,
-                                        left: -ui.position.left * scale
+                                        top: -ui.position.top,
+                                        left: -ui.position.left
                                     }}}))
                         }
                     }).rotatable({

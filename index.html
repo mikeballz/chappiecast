@@ -36,11 +36,11 @@
         var data = JSON.parse(event.data);
         if (data.newId) {
           state.id = data.newId;
-        } else if ((data.deviceId == state.id || data.deviceId =='all' ) && data.changes) {
+        } else if ((data.deviceId == state.id || data.deviceId =='all') && data.changes) {
           var element = document.querySelector('video');
           if (data.changes.position) {
-            state.top = element.style.top = data.changes.position.top;
-            state.top = element.style.left = data.changes.position.left;
+            state.top = element.style.top = (data.changes.position.top * state.scale);
+            state.left = element.style.left = (data.changes.position.left * state.scale);
           }
           if (data.changes.rotation) {
             var rotation = state.rotation = data.changes.rotation;
@@ -51,7 +51,7 @@
             parent.style.transform = 'rotate(' + rotation + ')';
           }
           if (data.changes.scale) {
-            var scale = state.scale = data.changes.scale;
+            var scale = data.changes.scale;
             element.style.transform = 'scale(' + scale + ')';
           }
         } else if (data == 'reset') {
