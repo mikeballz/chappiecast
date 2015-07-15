@@ -29,8 +29,8 @@ $(function(){
                     .css({
                         height:device.height / scale,
                         width:device.width / scale,
-                        top:device.top,
-                        left:device.left
+                        top:((-device.position.top || 0) / scale) + 'px',
+                        left:((-device.position.left || 0) / scale) + 'px'
                     })
                     .draggable({
                         containment: 'parent',

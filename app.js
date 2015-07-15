@@ -34,6 +34,7 @@ deviceSocket.on("connection", function(ws) {
       // set initial values
       var newDevice = data.initialValues;
       newDevice.id = socketId;
+      newDevice.position = {};
       devices.push(newDevice);
       ws.send(JSON.stringify({newId: socketId}))
     }
@@ -57,6 +58,7 @@ controlSocket.on('connection', function(ws){
   ws.onmessage = function(event){
     var data = JSON.parse(event.data);
     if (data.changes) {
+      updateDeviceStore(data);
       broadcastToDevices(data);
     } else if (data == 'reset') {
       broadcastToDevices('reset')
@@ -71,3 +73,11 @@ controlSocket.on('connection', function(ws){
     console.log("control websocket connection close");
   })
 });
+
+function updateDeviceStore(data) {
+  var changes = data.changes;
+  var device = devices.filter(function(device){ return device.id == data.deviceId; })[0];
+  ['position','scale','rotation'].forEach(function(prop){
+    device[prop] = changes[prop] || device[prop];
+  })
+}

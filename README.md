@@ -2,9 +2,9 @@
 
 ## TODO
 * Unfuck rotation
-* drag to change video scale
+* ~~drag to change video scale~~
 * ability to use videos other than the original sample
-* Persistance on the control screen so devices maintain their positions between reloads
+* ~~Persistence on the control screen so devices maintain their positions between reloads~~
 
 ## Instructions
 * Clone the repo
