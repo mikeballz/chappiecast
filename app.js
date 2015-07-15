@@ -76,8 +76,17 @@ controlSocket.on('connection', function(ws){
 
 function updateDeviceStore(data) {
   var changes = data.changes;
-  var device = devices.filter(function(device){ return device.id == data.deviceId; })[0];
-  ['position','scale','rotation'].forEach(function(prop){
-    device[prop] = changes[prop] || device[prop];
+  var changedDevices = devices.filter(function(device){
+    if (data.deviceId == 'all') {
+      return true;
+    } else {
+      return device.id == data.deviceId;
+    }
+  });
+  changedDevices.forEach(function(device){
+    ['position','scale','rotation'].forEach(function(prop){
+      device[prop] = changes[prop] || device[prop];
+    })
   })
+
 }

@@ -44,6 +44,7 @@ $(function(){
                                     }}}))
                         }
                     }).rotatable({
+                        snap: true,
                         stop: function(event, ui) {
                             ws.send(JSON.stringify({
                                 deviceId:device.id,
@@ -52,7 +53,19 @@ $(function(){
                                 }}))
                         }
                     }).append('<span class="device-id">' + device.id + '</span>');
-            })
+            });
+
+            if (data.devices[0].scale && scale != data.devices[0].scale) {
+                scale = data.devices[0].scale || scale;
+
+                $('.video-frame').css('width', setToScale).css('height', setToScale);
+            }
+
+
+            function setToScale(idx, value) {
+                value = parseFloat(value);
+                return value * (scale / 2);
+            }
         }
     };
 
