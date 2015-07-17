@@ -45,16 +45,21 @@
             state.left = element.style.left = (data.changes.position.left * state.scale);
           }
           if (data.changes.rotation) {
-            var rotation = state.rotation = data.changes.rotation;
-            var parent = document.getElementById('video-container');
-            var originY = ( state.top + (state.height / 2)  * state.scale) + 'px';
-            var originX = ( state.left + (state.width / 2) * state.scale) + 'px';
-            parent.style.transformOrigin = [originX, originY, 0].join(' ');
-            parent.style.transform = 'rotate(' + rotation + ')';
+//            Rotation is still broken so FUCK IT
+//            var rotation = state.rotation = data.changes.rotation;
+//            var parent = document.getElementById('video-container');
+//            var originY = ( element.offsetTop + (state.height / 2)) + 'px';
+//            var originX = ( element.offsetLeft + (state.width / 2)) + 'px';
+//            parent.style.transformOrigin = [originX, originY, 0].join(' ');
+//            parent.style.transform = 'rotate(' + rotation + ')';
+//            parent.style.webkitTransformOrigin = [originX, originY, 0].join(' ');
+//            parent.style.webkitTransform = 'rotate(' + rotation + ')';
           }
           if (data.changes.scale) {
             var scale = data.changes.scale;
-            element.style.transform = 'scale(' + scale + ')';
+            var scaleString = 'scale(' + scale + ')';
+            element.style.transform = scaleString;
+            element.style.webkitTransform = scaleString;
           }
         } else if (data == 'reset') {
           document.querySelector('video').currentTime = 0;

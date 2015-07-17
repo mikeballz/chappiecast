@@ -1,7 +1,6 @@
 $(function(){
     var host = location.origin.replace(/^http/, 'ws');
     var ws = new WebSocket(host + '/control');
-    var devices = [];
     var scale = 2;
 
     $('.video-frame').resizable({
@@ -42,15 +41,15 @@ $(function(){
                                         left: -ui.position.left
                                     }}}))
                         }
-                    }).rotatable({
-                        snap: true,
-                        stop: function(event, ui) {
-                            ws.send(JSON.stringify({
-                                deviceId:device.id,
-                                changes:{
-                                    rotation: ui.angle.current.toFixed(2)+ 'rad'
-                                }}))
-                        }
+                    //}).rotatable({
+                    //    snap: true,
+                    //    stop: function(event, ui) {
+                    //        ws.send(JSON.stringify({
+                    //            deviceId:device.id,
+                    //            changes:{
+                    //                rotation: ui.angle.current.toFixed(2)+ 'rad'
+                    //            }}))
+                    //    }
                     }).append('<span class="device-id">' + device.id + '</span>');
             });
 
