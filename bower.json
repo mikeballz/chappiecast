@@ -1,11 +1,12 @@
 {
   "name": "ws-video-multicast",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "authors": [
     "Max Furman <max@arcweb.co>"
   ],
   "description": "Show a video across multiple devices at arbitrary positions",
   "license": "MIT",
+  "private":true,
   "ignore": [
     "**/.*",
     "node_modules",

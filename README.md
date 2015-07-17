@@ -1,7 +1,7 @@
 # Node server that uses websockets to spread a video across multiple webviews
 
 ## TODO
-* Unfuck rotation
+* Add rotation to clients
 * ~~drag to change video scale~~
 * ability to use videos other than the original sample
 * ~~Persistence on the control screen so devices maintain their positions between reloads~~
@@ -12,5 +12,5 @@
 * `bower install`
 * `npm start` to start the server
 * Client windows go to localhost:5000
-* control window lives at localhost:5000/control.html
-** Opening more than one control window will probably ruin your day
+* Control window lives at localhost:5000/control.html
+* * Opening more than one control window will probably ruin your day
