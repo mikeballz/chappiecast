@@ -18,6 +18,8 @@ $(function(){
 
     ws.onmessage = function(event) {
         var data = JSON.parse(event.data);
+        populateSelectVideo(data.options);
+        
         if (data.devices) {
             $.each(data.devices, function(index, device){
                 var newElement = document.createElement('div');
@@ -76,5 +78,18 @@ $(function(){
     window.resetVideos = pingWithText('reset');
     window.pause = pingWithText('pause');
     window.resume = pingWithText('resume');
+
+    //Populate video dropdown
+    function populateSelectVideo(options) {
+      var select = document.getElementById('select-video');
+
+      for (var i = 0; i < options.length; i++){
+          var opt = options[i];
+          var el = document.createElement('option');
+          el.textContent = opt;
+          el.value = opt;
+          select.appendChild(el);
+      }
+    }
 
 });

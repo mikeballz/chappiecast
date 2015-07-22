@@ -5,6 +5,7 @@ var app = express();
 var port = process.env.PORT || 5000;
 var multer  = require('multer');
 var done=false;
+var fs = require('fs');
 
 WebSocketServer.prototype.broadcast = function broadcast(data) {
   this.clients.forEach(function each(client) {
@@ -31,6 +32,7 @@ app.post('/upload',function(req,res){
   if(done==true){
     console.log(req.files);
     console.log("File uploaded.");
+    res.redirect('/control.html');
   }
 });
 
@@ -77,10 +79,23 @@ function broadcastToDevices(text) {
 
 controlSocket.on('connection', function(ws){
   console.log("control websocket connection open");
-  ws.send(JSON.stringify({devices: devices}));
+
+  // add videos to locals
+  app.locals.options = [];
+
+  fs.readdir('./uploads',function(err,files){
+    if(err) throw err;
+    files.forEach(function(file){
+      app.locals.options.push(file);
+    });
+    ws.send(JSON.stringify({devices: devices, options: app.locals.options}));
+  });
+
+  ws.send(JSON.stringify({devices: devices, options: app.locals.options}));
 
   ws.onmessage = function(event){
     var data = JSON.parse(event.data);
+
     if (data.changes) {
       updateDeviceStore(data);
       broadcastToDevices(data);
