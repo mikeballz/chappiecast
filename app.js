@@ -3,12 +3,36 @@ var http = require("http");
 var express = require("express");
 var app = express();
 var port = process.env.PORT || 5000;
+var multer  = require('multer');
+var done=false;
 
 WebSocketServer.prototype.broadcast = function broadcast(data) {
   this.clients.forEach(function each(client) {
     client.send(data);
   });
 };
+
+// Configure the multer.
+app.use(multer({ dest: './uploads/',
+ rename: function (fieldname, filename) {
+    return filename;
+  },
+  onFileUploadStart: function (file) {
+    console.log(file.originalname + ' is starting ...')
+  },
+  onFileUploadComplete: function (file) {
+    console.log(file.fieldname + ' uploaded to  ' + file.path)
+    done=true;
+}
+}));
+
+// Handling routes.
+app.post('/upload',function(req,res){
+  if(done==true){
+    console.log(req.files);
+    console.log("File uploaded.");
+  }
+});
 
 app.use(express.static(__dirname + "/"));
 

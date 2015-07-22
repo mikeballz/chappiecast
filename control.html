@@ -15,9 +15,14 @@
 </head>
 <body>
     <div class="main-container">
+        <select id="select-video"></select>
         <button onclick="resetVideos()">Reset Video</button>
         <button onclick="pause()">Pause Video</button>
         <button onclick="resume()">Resume Video</button>
+        <form id = "uploadForm" enctype =  "multipart/form-data" action = "/upload" method = "post">
+            <input type="file" name="userFile" />
+            <input type="submit" value="Upload File" name="submit">
+        </form>
         <div class="video-frame">
         </div>
     </div>
