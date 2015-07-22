@@ -2,6 +2,7 @@ $(function(){
     var host = location.origin.replace(/^http/, 'ws');
     var ws = new WebSocket(host + '/control');
     var scale = 2;
+    var videoSelector = $('#select-video');
 
     $('.video-frame').resizable({
         aspectRatio: true,
@@ -19,6 +20,9 @@ $(function(){
     ws.onmessage = function(event) {
         var data = JSON.parse(event.data);
         populateSelectVideo(data.options);
+
+        //initialize video
+        ws.send(JSON.stringify({ video: videoSelector.val() }));
         
         if (data.devices) {
             $.each(data.devices, function(index, device){
@@ -91,5 +95,10 @@ $(function(){
           select.appendChild(el);
       }
     }
+
+    //Listen for dropdown change
+    videoSelector.on('change', function() {
+      ws.send(JSON.stringify({ video: $(this).val() }));
+    });
 
 });

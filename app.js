@@ -62,7 +62,7 @@ deviceSocket.on("connection", function(ws) {
       newDevice.id = socketId;
       newDevice.position = {};
       devices.push(newDevice);
-      ws.send(JSON.stringify({newId: socketId}))
+      ws.send(JSON.stringify({newId: socketId, video: app.locals.video}))
     }
   };
 
@@ -79,6 +79,7 @@ function broadcastToDevices(text) {
 
 controlSocket.on('connection', function(ws){
   console.log("control websocket connection open");
+  ws.send(JSON.stringify({devices: devices}));
 
   // add videos to locals
   app.locals.options = [];
@@ -90,8 +91,6 @@ controlSocket.on('connection', function(ws){
     });
     ws.send(JSON.stringify({devices: devices, options: app.locals.options}));
   });
-
-  ws.send(JSON.stringify({devices: devices, options: app.locals.options}));
 
   ws.onmessage = function(event){
     var data = JSON.parse(event.data);
@@ -105,6 +104,9 @@ controlSocket.on('connection', function(ws){
       broadcastToDevices('pause')
     } else if (data == 'resume') {
       broadcastToDevices('resume')
+    } else if (data.video) {
+      app.locals.video = data;
+      broadcastToDevices(data);
     }
   };
 
