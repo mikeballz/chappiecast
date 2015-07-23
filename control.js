@@ -85,6 +85,13 @@ $(function(){
     function pingWithText(text) {
         return function(){
             ws.send(JSON.stringify(text))
+            if (text == 'reset') {
+              document.querySelector('video').currentTime = 0;
+            } else if (text == 'pause') {
+              document.querySelector('video').pause();
+            } else if (text == 'resume') {
+              document.querySelector('video').play();
+            }
         }
     }
 
