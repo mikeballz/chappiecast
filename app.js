@@ -79,6 +79,14 @@ function broadcastToDevices(text) {
 
 controlSocket.on('connection', function(ws){
   console.log("control websocket connection open");
+
+  //reset scale 
+  devices.forEach(function(device){
+    if (device.scale){
+      device.scale = 2;
+    }
+  });
+
   ws.send(JSON.stringify({devices: devices}));
 
   // add videos to locals
