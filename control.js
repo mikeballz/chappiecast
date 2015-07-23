@@ -3,11 +3,12 @@ $(function(){
     var ws = new WebSocket(host + '/control');
     var scale = 2;
     var videoSelector = $('#select-video');
+    var originalVideoWidth;
 
     $('.video-frame').resizable({
         aspectRatio: true,
         stop: function(event, ui) {
-            var ratio = (ui.size.width / ui.originalSize.width) * scale;
+            var ratio = (ui.size.width / originalVideoWidth) * scale;
             ws.send(JSON.stringify({
                 deviceId: 'all',
                 changes: {
@@ -29,6 +30,7 @@ $(function(){
         document.querySelector('video').src = location.origin + '/uploads/' + videoSelector.val();
         document.querySelector('video').onloadedmetadata = function() {
           var width = this.videoWidth;
+          originalVideoWidth = this.videoWidth;
           var height = this.videoHeight;
           $('.video-frame').css('width', width).css('height', height);
         };
