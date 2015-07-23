@@ -21,9 +21,18 @@ $(function(){
         var data = JSON.parse(event.data);
         populateSelectVideo(data.options);
 
-        //initialize video
+        //initialize video in devices
         ws.send(JSON.stringify({ video: videoSelector.val() }));
-        
+        ws.send(JSON.stringify({ deviceId: 'all', changes: {scale: 2} }));
+
+        //initialize video in control
+        document.querySelector('video').src = location.origin + '/uploads/' + videoSelector.val();
+        document.querySelector('video').onloadedmetadata = function() {
+          var width = this.videoWidth;
+          var height = this.videoHeight;
+          $('.video-frame').css('width', width).css('height', height);
+        };
+
         if (data.devices) {
             $.each(data.devices, function(index, device){
                 var newElement = document.createElement('div');
@@ -98,6 +107,7 @@ $(function(){
 
     //Listen for dropdown change
     videoSelector.on('change', function() {
+      document.querySelector('video').src = location.origin + '/uploads/' + $(this).val();
       ws.send(JSON.stringify({ video: $(this).val() }));
     });
 
