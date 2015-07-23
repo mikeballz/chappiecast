@@ -61,9 +61,7 @@
             element.style.transform = scaleString;
             element.style.webkitTransform = scaleString;
           }
-          if (data.video) {
-            document.querySelector('video').src = location.origin + '/uploads/' + data.video;
-          }
+
         } else if (data == 'reset') {
           document.querySelector('video').currentTime = 0;
         } else if (data == 'pause') {
@@ -72,6 +70,12 @@
           document.querySelector('video').play();
         } else if (data.video) {
           document.querySelector('video').src = location.origin + '/uploads/' + data.video;
+          //reset video scale
+          var element = document.querySelector('video');
+          var scale = 2;
+          var scaleString = 'scale(' + scale + ')';
+          element.style.transform = scaleString;
+          element.style.webkitTransform = scaleString;
         }
       };
       ws.onopen = function(event) {
