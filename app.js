@@ -53,13 +53,17 @@ deviceSocket.on("connection", function(ws) {
 
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
+    
+    console.log("From device: ");
+    console.log(data);
+    
     if (data.initialValues) {
       // set initial values
       var newDevice = data.initialValues;
       newDevice.id = socketId;
       newDevice.position = {};
       devices.push(newDevice);
-      ws.send(JSON.stringify({newId: socketId, video: app.locals.video}))
+      ws.send(JSON.stringify({newId: socketId, video: app.locals.selectedVideo}))
     }
   };
 
@@ -77,29 +81,30 @@ function broadcastToDevices(text) {
 controlSocket.on('connection', function(ws){
   console.log("control websocket connection open");
 
-  //reset scale 
-  devices.forEach(function(device){
-    if (device.scale){
-      device.scale = 2;
-    }
-  });
+  if (!app.locals.selectedVideo){
+    //reset scale 
+    resetDeviceScale();
+  }
 
   ws.send(JSON.stringify({devices: devices}));
 
   // add videos to locals
-  app.locals.options = [];
+  app.locals.videos = [];
 
   fs.readdir('./uploads',function(err,files){
     if(err) throw err;
     files.forEach(function(file){
-      app.locals.options.push(file);
+      app.locals.videos.push(file);
     });
-    ws.send(JSON.stringify({devices: devices, options: app.locals.options}));
+    ws.send(JSON.stringify({devices: devices, options: app.locals.videos, selectedVideo: app.locals.selectedVideo}));
   });
 
   ws.onmessage = function(event){
     var data = JSON.parse(event.data);
-
+    
+    console.log("From Control: ");
+    console.log(data);
+    
     if (data.changes) {
       updateDeviceStore(data);
       broadcastToDevices(data);
@@ -110,7 +115,8 @@ controlSocket.on('connection', function(ws){
     } else if (data == 'resume') {
       broadcastToDevices('resume')
     } else if (data.video) {
-      app.locals.video = data;
+      app.locals.selectedVideo = data.video;
+      resetDeviceScale();
       broadcastToDevices(data);
     }
   };
@@ -119,6 +125,14 @@ controlSocket.on('connection', function(ws){
     console.log("control websocket connection close");
   })
 });
+
+function resetDeviceScale(){
+  devices.forEach(function(device){
+    if (device.scale){
+      device.scale = 2;
+    }
+  });
+}
 
 function updateDeviceStore(data) {
   var changes = data.changes;
