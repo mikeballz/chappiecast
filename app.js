@@ -43,12 +43,13 @@ var deviceSocket = new WebSocketServer({server: server, path: '/'});
 var controlSocket = new WebSocketServer({server: server, path: '/control'});
 console.log("websocket server created");
 
-var devices = [];
-var uids = 1;
+app.locals.devices = [];
+app.locals.videos = [];
+app.locals.uids = 1;
 
 deviceSocket.on("connection", function(ws) {
   console.log("websocket connection open");
-  var socketId = uids++;
+  var socketId = app.locals.uids++;
 
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
@@ -61,15 +62,16 @@ deviceSocket.on("connection", function(ws) {
       var newDevice = data.initialValues;
       newDevice.id = socketId;
       newDevice.position = {};
-      devices.push(newDevice);
+      app.locals.devices.push(newDevice);
       ws.send(JSON.stringify({newId: socketId, video: app.locals.selectedVideo}))
     }
   };
 
   ws.on("close", function() {
-    var thisDevice = devices.filter(function(device){ return device.id == socketId })[0];
-    var idx = devices.indexOf(thisDevice);
-    devices.splice(idx,1)
+    var devices = app.locals.devices,
+    thisDevice = devices.filter(function(device){ return device.id == socketId })[0],
+    idx = devices.indexOf(thisDevice);
+    devices.splice(idx,1);
   })
 });
 
@@ -85,17 +87,12 @@ controlSocket.on('connection', function(ws){
     resetDeviceScale();
   }
 
-  ws.send(JSON.stringify({devices: devices}));
-
-  // add videos to locals
-  app.locals.videos = [];
+  ws.send(JSON.stringify({devices: app.locals.devices}));
 
   fs.readdir('./uploads',function(err,files){
     if(err) throw err;
-    files.forEach(function(file){
-      app.locals.videos.push(file);
-    });
-    ws.send(JSON.stringify({devices: devices, videos: app.locals.videos, selectedVideo: app.locals.selectedVideo}));
+    app.locals.videos = files;
+    ws.send(JSON.stringify({devices: app.locals.devices, videos: app.locals.videos, selectedVideo: app.locals.selectedVideo}));
   });
 
   ws.onmessage = function(event){
@@ -126,7 +123,7 @@ controlSocket.on('connection', function(ws){
 });
 
 function resetDeviceScale(){
-  devices.forEach(function(device){
+  app.locals.devices.forEach(function(device){
     if (device.scale){
       device.scale = 2;
     }
@@ -135,7 +132,7 @@ function resetDeviceScale(){
 
 function updateDeviceStore(data) {
   var changes = data.changes;
-  var changedDevices = devices.filter(function(device){
+  var changedDevices = app.locals.devices.filter(function(device){
     if (data.deviceId == 'all') {
       return true;
     } else {
