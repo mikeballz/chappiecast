@@ -4,7 +4,8 @@
   "private": true,
   "dependencies": {
     "express": "^4.4.5",
-    "ws": "0.4.x"
+    "ws": "0.4.x",
+    "multer": "~0.1.6"
   },
   "engines": {
     "node": "0.10.x"

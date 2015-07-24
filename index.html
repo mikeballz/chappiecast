@@ -61,12 +61,21 @@
             element.style.transform = scaleString;
             element.style.webkitTransform = scaleString;
           }
+
         } else if (data == 'reset') {
           document.querySelector('video').currentTime = 0;
         } else if (data == 'pause') {
           document.querySelector('video').pause();
         } else if (data == 'resume') {
           document.querySelector('video').play();
+        } else if (data.video) {
+          document.querySelector('video').src = location.origin + '/uploads/' + data.video;
+          //reset video scale
+          var element = document.querySelector('video');
+          var scale = 2;
+          var scaleString = 'scale(' + scale + ')';
+          element.style.transform = scaleString;
+          element.style.webkitTransform = scaleString;
         }
       };
       ws.onopen = function(event) {
@@ -81,7 +90,7 @@
   <body>
     <div id="frame">
       <div id="video-container">
-        <video src="SampleVideo.mp4" muted autoplay loop></video>
+        <video muted autoplay loop></video>
       </div>
     </div>
   </body>

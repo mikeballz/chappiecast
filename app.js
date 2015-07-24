@@ -3,12 +3,35 @@ var http = require("http");
 var express = require("express");
 var app = express();
 var port = process.env.PORT || 5000;
+var multer  = require('multer');
+var done = false;
+var fs = require('fs');
 
 WebSocketServer.prototype.broadcast = function broadcast(data) {
   this.clients.forEach(function each(client) {
     client.send(data);
   });
 };
+
+// Configure the multer.
+app.use(multer({ dest: './uploads/',
+ rename: function (fieldname, filename) {
+    return filename;
+  },
+  onFileUploadStart: function (file) {
+    console.log(file.originalname + ' is starting ...')
+  },
+  onFileUploadComplete: function (file) {
+    console.log(file.fieldname + ' uploaded to  ' + file.path)
+}
+}));
+
+// Handling routes.
+app.post('/upload',function(req,res){
+  console.log(req.files);
+  console.log("File uploaded.");
+  res.redirect('/control.html');
+});
 
 app.use(express.static(__dirname + "/"));
 
@@ -30,13 +53,17 @@ deviceSocket.on("connection", function(ws) {
 
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
+    
+    console.log("From device: ");
+    console.log(data);
+    
     if (data.initialValues) {
       // set initial values
       var newDevice = data.initialValues;
       newDevice.id = socketId;
       newDevice.position = {};
       devices.push(newDevice);
-      ws.send(JSON.stringify({newId: socketId}))
+      ws.send(JSON.stringify({newId: socketId, video: app.locals.selectedVideo}))
     }
   };
 
@@ -53,10 +80,31 @@ function broadcastToDevices(text) {
 
 controlSocket.on('connection', function(ws){
   console.log("control websocket connection open");
+
+  if (!app.locals.selectedVideo){
+    //reset scale 
+    resetDeviceScale();
+  }
+
   ws.send(JSON.stringify({devices: devices}));
+
+  // add videos to locals
+  app.locals.videos = [];
+
+  fs.readdir('./uploads',function(err,files){
+    if(err) throw err;
+    files.forEach(function(file){
+      app.locals.videos.push(file);
+    });
+    ws.send(JSON.stringify({devices: devices, options: app.locals.videos, selectedVideo: app.locals.selectedVideo}));
+  });
 
   ws.onmessage = function(event){
     var data = JSON.parse(event.data);
+    
+    console.log("From Control: ");
+    console.log(data);
+    
     if (data.changes) {
       updateDeviceStore(data);
       broadcastToDevices(data);
@@ -66,6 +114,10 @@ controlSocket.on('connection', function(ws){
       broadcastToDevices('pause')
     } else if (data == 'resume') {
       broadcastToDevices('resume')
+    } else if (data.video) {
+      app.locals.selectedVideo = data.video;
+      resetDeviceScale();
+      broadcastToDevices(data);
     }
   };
 
@@ -73,6 +125,14 @@ controlSocket.on('connection', function(ws){
     console.log("control websocket connection close");
   })
 });
+
+function resetDeviceScale(){
+  devices.forEach(function(device){
+    if (device.scale){
+      device.scale = 2;
+    }
+  });
+}
 
 function updateDeviceStore(data) {
   var changes = data.changes;

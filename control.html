@@ -12,13 +12,25 @@
     <script type="text/javascript" src="bower_components/jquery-ui/jquery-ui.min.js"></script>
     <script type="text/javascript" src="bower_components/jquery-ui-rotatable/jquery.ui.rotatable.min.js"></script>
     <script type="text/javascript" src="control.js"></script>
+    <style>
+      video {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
 </head>
 <body>
     <div class="main-container">
+        <select id="select-video"></select>
         <button onclick="resetVideos()">Reset Video</button>
         <button onclick="pause()">Pause Video</button>
         <button onclick="resume()">Resume Video</button>
+        <form id = "uploadForm" enctype =  "multipart/form-data" action = "/upload" method = "post">
+            <input type="file" name="userFile" />
+            <input type="submit" value="Upload File" name="submit">
+        </form>
         <div class="video-frame">
+            <video muted autoplay loop></video>
         </div>
     </div>
 </body>
