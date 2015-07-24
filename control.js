@@ -21,12 +21,12 @@ $(function(){
     });
 
     ws.onmessage = function(event) {
-        var data = JSON.parse(event.data);
+        var data = JSON.parse(event.data),
         selectedVideo = data.selectedVideo;
-        populateSelectVideo(data.options, data.selectedVideo);
+        populateSelectVideo(data.videos, selectedVideo);
 
         //initialize video in devices
-        if (videoSelector.val() != data.selectedVideo){
+        if (videoSelector.val() != selectedVideo){
           ws.send(JSON.stringify({ video: videoSelector.val() }));
         }
 
@@ -89,36 +89,34 @@ $(function(){
     };
 
     function pingWithText(text) {
-        return function(){
-            ws.send(JSON.stringify(text))
-            if (text == 'reset') {
-              document.querySelector('video').currentTime = 0;
-            } else if (text == 'pause') {
-              document.querySelector('video').pause();
-            } else if (text == 'resume') {
-              document.querySelector('video').play();
-            }
-        }
+        ws.send(JSON.stringify(text));
     }
 
-    window.resetVideos = pingWithText('reset');
-    window.pause = pingWithText('pause');
-    window.resume = pingWithText('resume');
+    window.resetVideos = function() {
+        document.querySelector('video').currentTime = 0;
+        pingWithText('reset');
+    };
+
+    window.pause = function() {
+        document.querySelector('video').pause();
+        pingWithText('pause');
+    };
+
+    window.resume = function() {
+        document.querySelector('video').play();
+        pingWithText('resume');
+    };
 
     //Populate video dropdown
-    function populateSelectVideo(options, video) {
-      var select = document.getElementById('select-video');
+    function populateSelectVideo(allVideos, currentVideo) {
+      var select = $('#select-video');
 
-      for (var i = 0; i < options.length; i++){
-          var opt = options[i];
-          var el = document.createElement('option');
-          el.textContent = opt;
-          el.value = opt;
-          select.appendChild(el);
-      }
+        select.append($.map(allVideos, function (video) {
+            return $('<option>', {value: video}).text(video);
+        }) );
 
-      if (video){
-        document.getElementById('select-video').value = video;
+      if (currentVideo){
+        select.value = currentVideo;
       }
     }
 
