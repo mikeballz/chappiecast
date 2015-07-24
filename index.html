@@ -1,5 +1,6 @@
 <html>
   <head>
+      <meta name="viewport" content="width=device-width, user-scalable=no initial-scale=1.0, minimum-scale=1.0" />
     <style>
       body {
         padding: 0;
@@ -83,7 +84,10 @@
       };
 
       ws.onopen = function(event) {
+        var videoElement = document.querySelector('video');
         send({initialValues:{height: state.height, width: state.width}});
+        document.addEventListener('click', function(){ videoElement.play()} );
+        videoElement.load();
       };
 
       function send(data) {
