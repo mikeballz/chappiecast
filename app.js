@@ -4,7 +4,7 @@ var express = require("express");
 var app = express();
 var port = process.env.PORT || 5000;
 var multer  = require('multer');
-var done=false;
+var done = false;
 var fs = require('fs');
 
 WebSocketServer.prototype.broadcast = function broadcast(data) {
@@ -23,17 +23,14 @@ app.use(multer({ dest: './uploads/',
   },
   onFileUploadComplete: function (file) {
     console.log(file.fieldname + ' uploaded to  ' + file.path)
-    done=true;
 }
 }));
 
 // Handling routes.
 app.post('/upload',function(req,res){
-  if(done==true){
-    console.log(req.files);
-    console.log("File uploaded.");
-    res.redirect('/control.html');
-  }
+  console.log(req.files);
+  console.log("File uploaded.");
+  res.redirect('/control.html');
 });
 
 app.use(express.static(__dirname + "/"));
