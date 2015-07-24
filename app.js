@@ -92,7 +92,7 @@ controlSocket.on('connection', function(ws){
   fs.readdir('./uploads',function(err,files){
     if(err) throw err;
     app.locals.videos = files;
-    ws.send(JSON.stringify({devices: app.locals.devices, videos: app.locals.videos, selectedVideo: app.locals.selectedVideo}));
+    ws.send(JSON.stringify({videos: app.locals.videos, selectedVideo: app.locals.selectedVideo}));
   });
 
   ws.onmessage = function(event){

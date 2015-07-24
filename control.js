@@ -118,7 +118,7 @@ $(function () {
         }));
 
         if (currentVideo) {
-            select.value = currentVideo;
+            select.val(currentVideo);
         }
     }
 
