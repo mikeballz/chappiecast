@@ -4,7 +4,6 @@ var express = require("express");
 var app = express();
 var port = process.env.PORT || 5000;
 var multer  = require('multer');
-var done = false;
 var fs = require('fs');
 
 WebSocketServer.prototype.broadcast = function broadcast(data) {
@@ -96,7 +95,7 @@ controlSocket.on('connection', function(ws){
     files.forEach(function(file){
       app.locals.videos.push(file);
     });
-    ws.send(JSON.stringify({devices: devices, options: app.locals.videos, selectedVideo: app.locals.selectedVideo}));
+    ws.send(JSON.stringify({devices: devices, videos: app.locals.videos, selectedVideo: app.locals.selectedVideo}));
   });
 
   ws.onmessage = function(event){

@@ -34,15 +34,19 @@
         width: window.innerWidth,
         height: window.innerHeight
       };
+
       ws.onmessage = function (event) {
-        var data = JSON.parse(event.data);
+        var scale,
+            scaleString,
+            data = JSON.parse(event.data),
+            videoElement = document.querySelector('video');
+
         if (data.newId) {
           state.id = data.newId;
         } else if ((data.deviceId == state.id || data.deviceId =='all') && data.changes) {
-          var element = document.querySelector('video');
           if (data.changes.position) {
-            state.top = element.style.top = (data.changes.position.top * state.scale);
-            state.left = element.style.left = (data.changes.position.left * state.scale);
+            state.top = videoElement.style.top = (data.changes.position.top * state.scale);
+            state.left = videoElement.style.left = (data.changes.position.left * state.scale);
           }
           if (data.changes.rotation) {
 //            Rotation is still broken so FUCK IT
@@ -56,28 +60,28 @@
 //            parent.style.webkitTransform = 'rotate(' + rotation + ')';
           }
           if (data.changes.scale) {
-            var scale = data.changes.scale;
-            var scaleString = 'scale(' + scale + ')';
-            element.style.transform = scaleString;
-            element.style.webkitTransform = scaleString;
+            scale = data.changes.scale;
+            scaleString = 'scale(' + scale + ')';
+            videoElement.style.transform = scaleString;
+            videoElement.style.webkitTransform = scaleString;
           }
 
         } else if (data == 'reset') {
-          document.querySelector('video').currentTime = 0;
+          videoElement.currentTime = 0;
         } else if (data == 'pause') {
-          document.querySelector('video').pause();
+          videoElement.pause();
         } else if (data == 'resume') {
-          document.querySelector('video').play();
+          videoElement.play();
         } else if (data.video) {
-          document.querySelector('video').src = location.origin + '/uploads/' + data.video;
+          videoElement.src = 'uploads/' + data.video;
           //reset video scale
-          var element = document.querySelector('video');
-          var scale = 2;
-          var scaleString = 'scale(' + scale + ')';
-          element.style.transform = scaleString;
-          element.style.webkitTransform = scaleString;
+          scale = 2;
+          scaleString = 'scale(' + scale + ')';
+          videoElement.style.transform = scaleString;
+          videoElement.style.webkitTransform = scaleString;
         }
       };
+
       ws.onopen = function(event) {
         send({initialValues:{height: state.height, width: state.width}});
       };
