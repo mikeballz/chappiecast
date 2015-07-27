@@ -21,6 +21,8 @@ package co.arcweb.ws_video_multicast;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
+import org.apache.cordova.engine.SystemWebView;
+import android.webkit.WebSettings;
 
 public class MainActivity extends CordovaActivity
 {
@@ -30,5 +32,7 @@ public class MainActivity extends CordovaActivity
         super.onCreate(savedInstanceState);
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
+        WebSettings ws = ((SystemWebView)super.appView.getView()).getSettings();
+        ws.setMediaPlaybackRequiresUserGesture(false);
     }
 }

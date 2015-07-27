@@ -16,6 +16,8 @@
     </feature>
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
+    <preference name="AllowInlineMediaPlayback" value="true" />
+    <preference name="BackupWebStorage" value="local" />
     <name>WebSocketVideoMulticast</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
