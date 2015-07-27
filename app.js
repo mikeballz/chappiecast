@@ -8,7 +8,7 @@ var fs = require('fs');
 
 WebSocketServer.prototype.broadcast = function broadcast(data) {
   this.clients.forEach(function each(client) {
-    client.send(data);
+    client.send(JSON.stringify(data));
   });
 };
 
@@ -59,11 +59,9 @@ deviceSocket.on("connection", function(ws) {
     
     if (data.initialValues) {
       // set initial values
-      var newDevice = data.initialValues;
-      newDevice.id = socketId;
-      newDevice.position = {};
+      var newDevice = deviceFromInitialValues(data.initialValues);
       app.locals.devices.push(newDevice);
-      ws.send(JSON.stringify({newId: socketId, video: app.locals.selectedVideo}))
+      send({newId: socketId, video: app.locals.selectedVideo});
     }
   };
 
@@ -72,11 +70,24 @@ deviceSocket.on("connection", function(ws) {
     thisDevice = devices.filter(function(device){ return device.id == socketId })[0],
     idx = devices.indexOf(thisDevice);
     devices.splice(idx,1);
-  })
+  });
+
+  function send(data) {
+    ws.send(JSON.stringify(data));
+  }
+
+  function deviceFromInitialValues(values) {
+    return {
+      width: values.width,
+      height: values.height,
+      id: socketId,
+      position:{}
+    }
+  }
 });
 
 function broadcastToDevices(text) {
-  deviceSocket.broadcast(JSON.stringify(text));
+  deviceSocket.broadcast(text);
 }
 
 controlSocket.on('connection', function(ws){
@@ -87,12 +98,12 @@ controlSocket.on('connection', function(ws){
     resetDeviceScale();
   }
 
-  ws.send(JSON.stringify({devices: app.locals.devices}));
+  send({devices: app.locals.devices});
 
   fs.readdir('./uploads',function(err,files){
     if(err) throw err;
     app.locals.videos = files;
-    ws.send(JSON.stringify({videos: app.locals.videos, selectedVideo: app.locals.selectedVideo}));
+    send({videos: app.locals.videos, selectedVideo: app.locals.selectedVideo});
   });
 
   ws.onmessage = function(event){
@@ -119,7 +130,11 @@ controlSocket.on('connection', function(ws){
 
   ws.on("close", function() {
     console.log("control websocket connection close");
-  })
+  });
+
+  function send(data) {
+    ws.send(JSON.stringify(data));
+  }
 });
 
 function resetDeviceScale(){

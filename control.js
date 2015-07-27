@@ -3,6 +3,7 @@ $(function () {
     var ws = new WebSocket(host + '/control');
     var scale = 2;
     var videoSelector = $('#select-video');
+    var videoElement = document.querySelector('video');
     var originalVideoWidth;
     var selectedVideo;
     var ratio = 2;
@@ -20,26 +21,23 @@ $(function () {
         }
     });
 
+    videoElement.onloadedmetadata = function () {
+        originalVideoWidth = this.videoWidth;
+        var width = this.videoWidth * (scale / 2);
+        var height = this.videoHeight * (scale / 2);
+        $('.video-frame').css('width', width).css('height', height);
+    };
+
     ws.onmessage = function (event) {
-        var data = JSON.parse(event.data),
-            selectedVideo = data.selectedVideo;
-        populateSelectVideo(data.videos, selectedVideo);
+        var data = JSON.parse(event.data);
 
-        //initialize video in devices
-        if (videoSelector.val() != selectedVideo) {
-            send({video: videoSelector.val()});
-        }
-
-        //initialize video in control
-        document.querySelector('video').src = location.origin + '/uploads/' + videoSelector.val();
-        document.querySelector('video').onloadedmetadata = function () {
-            originalVideoWidth = this.videoWidth;
-            var width = this.videoWidth * (scale / 2);
-            var height = this.videoHeight * (scale / 2);
-            $('.video-frame').css('width', width).css('height', height);
-        };
-
-        if (data.devices) {
+        if (data.videos) {
+            populateSelectVideo(data.videos, data.selectedVideo);
+            if (videoSelector.val() != data.selectedVideo) {
+                send({video: videoSelector.val()});
+            }
+            setVideoSource(videoSelector.val());
+        } else if (data.devices) {
             $.each(data.devices, function (index, device) {
                 var newElement = document.createElement('div');
                 $('.video-frame').append(newElement);
@@ -95,41 +93,42 @@ $(function () {
     }
 
     window.resetVideos = function () {
-        document.querySelector('video').currentTime = 0;
+        videoElement.currentTime = 0;
         send('reset');
     };
 
     window.pause = function () {
-        document.querySelector('video').pause();
+        videoElement.pause();
         send('pause');
     };
 
     window.resume = function () {
-        document.querySelector('video').play();
+        videoElement.play();
         send('resume');
     };
 
     //Populate video dropdown
     function populateSelectVideo(allVideos, currentVideo) {
-        var select = $('#select-video');
-
-        select.append($.map(allVideos, function (video) {
+        videoSelector.append($.map(allVideos, function (video) {
             return $('<option>', {value: video}).text(video);
         }));
 
         if (currentVideo) {
-            select.val(currentVideo);
+            videoSelector.val(currentVideo);
         }
+    }
+
+    function setVideoSource(source) {
+        videoElement.src = 'uploads/' + source
     }
 
     //Listen for dropdown change
     videoSelector.on('change', function () {
-        console.log(selectedVideo);
         var newVideo = $(this).val();
         if (selectedVideo !== newVideo) {
             selectedVideo = newVideo;
             scale = 2;
-            document.querySelector('video').src = location.origin + '/uploads/' + newVideo;
+            setVideoSource(newVideo);
             send({video: newVideo});
         }
     });

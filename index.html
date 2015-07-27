@@ -26,24 +26,24 @@
     <script>
       var host = location.origin.replace(/^http/, 'ws');
       var ws = new WebSocket(host);
+      var DEFAULT_SCALE = 2;
       var state = {
         id:null,
         top:0,
         left:0,
         rotation:'0rad',
-        scale:2,
+        scale:DEFAULT_SCALE,
         width: window.innerWidth,
         height: window.innerHeight
       };
 
       ws.onmessage = function (event) {
-        var scale,
-            scaleString,
-            data = JSON.parse(event.data),
-            videoElement = document.querySelector('video');
+        var data = JSON.parse(event.data),
+        videoElement = document.querySelector('video');
 
         if (data.newId) {
           state.id = data.newId;
+          if (data.video) { videoElement.src = 'uploads/' + data.video; }
         } else if ((data.deviceId == state.id || data.deviceId =='all') && data.changes) {
           if (data.changes.position) {
             state.top = videoElement.style.top = (data.changes.position.top * state.scale);
@@ -61,10 +61,7 @@
 //            parent.style.webkitTransform = 'rotate(' + rotation + ')';
           }
           if (data.changes.scale) {
-            scale = data.changes.scale;
-            scaleString = 'scale(' + scale + ')';
-            videoElement.style.transform = scaleString;
-            videoElement.style.webkitTransform = scaleString;
+            setVideoScale(data.changes.scale);
           }
 
         } else if (data == 'reset') {
@@ -75,11 +72,14 @@
           videoElement.play();
         } else if (data.video) {
           videoElement.src = 'uploads/' + data.video;
-          //reset video scale
-          scale = 2;
-          scaleString = 'scale(' + scale + ')';
-          videoElement.style.transform = scaleString;
-          videoElement.style.webkitTransform = scaleString;
+          setVideoScale(DEFAULT_SCALE)
+        }
+
+        function setVideoScale(scale) {
+            state.scale = scale;
+            var scaleString = 'scale(' + scale + ')';
+            videoElement.style.transform = scaleString;
+            videoElement.style.webkitTransform = scaleString;
         }
       };
 
