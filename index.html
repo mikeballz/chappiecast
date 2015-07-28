@@ -54,13 +54,13 @@
         } else if ((data.deviceId == state.id || data.deviceId =='all') && data.changes) {
           if (data.changes.position) {
             //redefine video element to get position
-            element = document.querySelector('video');
+            var element = document.querySelector('video');
             state.top = element.style.top = (data.changes.position.top * state.scale);
             state.left = element.style.left = (data.changes.position.left * state.scale);
           }
           if (data.changes.rotation) {
            //redefine video element to get position
-           element = document.querySelector('video');
+           var element = document.querySelector('video');
            
            var rotation = state.rotation = data.changes.rotation;
            var parent = document.getElementById('video-container');
