@@ -64,7 +64,7 @@ $(function () {
                         }
                         }).rotatable({
                            snap: true,
-                           stop: function(event, ui) {
+                           rotate: function(event, ui) {
                                ws.send(JSON.stringify({
                                    deviceId:device.id,
                                    changes:{
