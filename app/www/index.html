@@ -1,0 +1,111 @@
+<html>
+  <head>
+      <meta name="viewport" content="width=device-width, user-scalable=no initial-scale=1.0, minimum-scale=1.0" />
+      <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' ws://192.168.1.44:5000 http://192.168.1.44:5000 data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+      <meta name="format-detection" content="telephone=no">
+      <meta name="msapplication-tap-highlight" content="no">
+      <script type="text/javascript" src="cordova.js"></script>
+    <style>
+      body {
+        padding: 0;
+        margin:0;
+      }
+
+      #frame {
+        width:100%;
+        height:100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      #video-container {
+        width:100%;
+        height:100%;
+      }
+
+      video {
+        position: absolute;
+        transform-origin: top left;
+        transform:scale(2);
+        -webkit-transform-origin: top left;
+        -webkit-transform:scale(2);
+      }
+    </style>
+
+    <script>
+//      var host = location.origin.replace(/^http/, 'ws');
+      var host = 'ws://192.168.1.44:5000';
+      var ws = new WebSocket(host);
+      var DEFAULT_SCALE = 2;
+      var state = {
+        id:null,
+        top:0,
+        left:0,
+        rotation:'0rad',
+        scale:DEFAULT_SCALE,
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+
+      ws.onmessage = function (event) {
+        var data = JSON.parse(event.data),
+        videoElement = document.querySelector('video');
+
+        if (data.newId) {
+          state.id = data.newId;
+          if (data.video) { videoElement.src = 'http://192.168.1.44:5000/uploads/' + data.video; }
+        } else if ((data.deviceId == state.id || data.deviceId =='all') && data.changes) {
+          if (data.changes.position) {
+            state.top = videoElement.style.top = (data.changes.position.top * state.scale);
+            state.left = videoElement.style.left = (data.changes.position.left * state.scale);
+          }
+          if (data.changes.rotation) {
+           var rotation = state.rotation = data.changes.rotation;
+           var parent = document.getElementById('video-container');
+
+           parent.style.transform = 'rotate(' + rotation + ')';
+           parent.style.webkitTransform = 'rotate(' + rotation + ')';
+          }
+          if (data.changes.scale) {
+            setVideoScale(data.changes.scale);
+          }
+
+        } else if (data == 'reset') {
+          videoElement.currentTime = 0;
+        } else if (data == 'pause') {
+          videoElement.pause();
+        } else if (data == 'resume') {
+          videoElement.play();
+        } else if (data.video) {
+          videoElement.src = 'http://192.168.1.44:5000/uploads/' + data.video;
+          setVideoScale(DEFAULT_SCALE)
+        }
+
+        function setVideoScale(scale) {
+            state.scale = scale;
+            var scaleString = 'scale(' + scale + ')';
+            videoElement.style.transform = scaleString;
+            videoElement.style.webkitTransform = scaleString;
+        }
+      };
+
+      ws.onopen = function(event) {
+        var videoElement = document.querySelector('video');
+        send({initialValues:{height: state.height, width: state.width}});
+        document.addEventListener('click', function(){ videoElement.play()} );
+        videoElement.load();
+      };
+
+      function send(data) {
+        ws.send(JSON.stringify(data))
+      }
+    </script>
+  </head>
+  <body>
+    <div id="frame">
+      <div id="video-container">
+        <video muted autoplay loop webkit-playsinline></video>
+      </div>
+    </div>
+  </body>
+</html>

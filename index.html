@@ -48,20 +48,13 @@
 
         if (data.newId) {
           state.id = data.newId;
-          //redefine video element to get position
-          videoElement = document.querySelector('video');
           if (data.video) { videoElement.src = 'uploads/' + data.video; }
         } else if ((data.deviceId == state.id || data.deviceId =='all') && data.changes) {
           if (data.changes.position) {
-            //redefine video element to get position
-            var element = document.querySelector('video');
-            state.top = element.style.top = (data.changes.position.top * state.scale);
-            state.left = element.style.left = (data.changes.position.left * state.scale);
+            state.top = videoElement.style.top = (data.changes.position.top * state.scale);
+            state.left = videoElement.style.left = (data.changes.position.left * state.scale);
           }
           if (data.changes.rotation) {
-           //redefine video element to get position
-           var element = document.querySelector('video');
-           
            var rotation = state.rotation = data.changes.rotation;
            var parent = document.getElementById('video-container');
 

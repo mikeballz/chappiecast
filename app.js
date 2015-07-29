@@ -81,7 +81,8 @@ deviceSocket.on("connection", function(ws) {
       width: values.width,
       height: values.height,
       id: socketId,
-      position:{}
+      position:{},
+      rotation:0
     }
   }
 });
