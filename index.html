@@ -14,6 +14,11 @@
         overflow: hidden;
       }
 
+      #video-container {
+        width:100%;
+        height:100%;
+      }
+
       video {
         position: absolute;
         transform-origin: top left;
@@ -43,22 +48,25 @@
 
         if (data.newId) {
           state.id = data.newId;
+          //redefine video element to get position
+          videoElement = document.querySelector('video');
           if (data.video) { videoElement.src = 'uploads/' + data.video; }
         } else if ((data.deviceId == state.id || data.deviceId =='all') && data.changes) {
           if (data.changes.position) {
-            state.top = videoElement.style.top = (data.changes.position.top * state.scale);
-            state.left = videoElement.style.left = (data.changes.position.left * state.scale);
+            //redefine video element to get position
+            var element = document.querySelector('video');
+            state.top = element.style.top = (data.changes.position.top * state.scale);
+            state.left = element.style.left = (data.changes.position.left * state.scale);
           }
           if (data.changes.rotation) {
-//            Rotation is still broken so FUCK IT
-//            var rotation = state.rotation = data.changes.rotation;
-//            var parent = document.getElementById('video-container');
-//            var originY = ( element.offsetTop + (state.height / 2)) + 'px';
-//            var originX = ( element.offsetLeft + (state.width / 2)) + 'px';
-//            parent.style.transformOrigin = [originX, originY, 0].join(' ');
-//            parent.style.transform = 'rotate(' + rotation + ')';
-//            parent.style.webkitTransformOrigin = [originX, originY, 0].join(' ');
-//            parent.style.webkitTransform = 'rotate(' + rotation + ')';
+           //redefine video element to get position
+           var element = document.querySelector('video');
+           
+           var rotation = state.rotation = data.changes.rotation;
+           var parent = document.getElementById('video-container');
+
+           parent.style.transform = 'rotate(' + rotation + ')';
+           parent.style.webkitTransform = 'rotate(' + rotation + ')';
           }
           if (data.changes.scale) {
             setVideoScale(data.changes.scale);
