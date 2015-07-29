@@ -17,7 +17,7 @@
        under the License.
  */
 
-package co.arcweb.ws_video_multicast;
+package co.arcweb.chappiecast;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
