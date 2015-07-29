@@ -64,12 +64,16 @@ $(function () {
                         }
                         }).rotatable({
                            snap: true,
+                           angle: parseFloat(device.rotation),
                            rotate: function(event, ui) {
-                               ws.send(JSON.stringify({
-                                   deviceId:device.id,
-                                   changes:{
-                                       rotation: (ui.angle.current.toFixed(2)*-1)+ 'rad'
-                                   }}))
+                               if(!isNaN(ui.angle.current)) {
+                                   send({
+                                       deviceId: device.id,
+                                       changes: {
+                                           rotation: (ui.angle.current.toFixed(2)) + 'rad'
+                                       }
+                                   });
+                               }
                            }
                     }).append('<span class="device-id">' + device.id + '</span>');
             });
