@@ -64,13 +64,13 @@ $(function () {
                         }
                         }).rotatable({
                            snap: true,
-                           angle: parseFloat(device.rotation),
+                           angle: -parseFloat(device.rotation),
                            rotate: function(event, ui) {
                                if(!isNaN(ui.angle.current)) {
                                    send({
                                        deviceId: device.id,
                                        changes: {
-                                           rotation: (ui.angle.current.toFixed(2)) + 'rad'
+                                           rotation: -(ui.angle.current.toFixed(2)) + 'rad'
                                        }
                                    });
                                }
