@@ -96,17 +96,17 @@ $(function () {
         ws.send(JSON.stringify(text));
     }
 
-    window.resetVideos = function () {
+    window.resetVideos = function resetVideos () {
         videoElement.currentTime = 0;
         send('reset');
     };
 
-    window.pause = function () {
+    window.pause = function pause () {
         videoElement.pause();
         send('pause');
     };
 
-    window.resume = function () {
+    window.resume = function resume () {
         videoElement.play();
         send('resume');
     };
@@ -135,6 +135,11 @@ $(function () {
             setVideoSource(newVideo);
             send({video: newVideo});
         }
+    });
+
+    $(videoElement).bind('ended', function(e){
+        resetVideos();
+        resume();
     });
 
 });
