@@ -122,6 +122,8 @@ controlSocket.on('connection', function(ws){
       broadcastToDevices('pause')
     } else if (data == 'resume') {
       broadcastToDevices('resume')
+    } else if (data == 'show ids') {
+      broadcastToDevices('show ids')
     } else if (data.video) {
       app.locals.selectedVideo = data.video;
       resetDeviceScale();

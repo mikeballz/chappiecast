@@ -76,6 +76,12 @@
           videoElement.pause();
         } else if (data == 'resume') {
           videoElement.play();
+        } else if (data == 'show ids') {
+          if (deviceIdText.style.display == 'block') {
+            deviceIdText.style.display = 'none';
+          } else {
+            deviceIdText.style.display = 'block';
+          }
         } else if (data.video) {
           videoElement.src = 'http://192.168.1.44:5000/uploads/' + data.video;
           setVideoScale(DEFAULT_SCALE)

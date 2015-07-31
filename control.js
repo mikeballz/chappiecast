@@ -111,6 +111,10 @@ $(function () {
         send('resume');
     };
 
+    window.showDeviceId = function () {
+        send('show ids');
+    };
+
     //Populate video dropdown
     function populateSelectVideo(allVideos, currentVideo) {
         videoSelector.append($.map(allVideos, function (video) {
