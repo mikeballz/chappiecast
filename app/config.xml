@@ -37,16 +37,16 @@
         <allow-intent href="itms-apps:*" />
         <preference name="AllowInlineMediaPlayback" value="true"/>
         <preference name="BackupWebStorage" value="local"/>
-        <icon src="res/ios/appicon-60" height="60" width="60"/>
-        <icon src="res/ios/appicon-60@2x" height="120" width="120"/>
-        <icon src="res/ios/appicon-60@3x" height="180" width="180"/>
+        <icon src="res/ios/appicon-60.png" height="60" width="60"/>
+        <icon src="res/ios/appicon-60@2x.png" height="120" width="120"/>
+        <icon src="res/ios/appicon-60@3x.png" height="180" width="180"/>
         <splash src="res/ios/Default.png" height="480" width="320"/>
         <splash src="res/ios/Default@2x.png" height="960" width="640"/>
         <splash src="res/ios/Default-568h@2x.png" height="1136" width="640"/>
         <splash src="res/ios/Default-667h@2x.png" height="1334" width="750"/>
         <splash src="res/ios/Default-Portrait.png" height="1024" width="768"/>
         <splash src="res/ios/Default-Portrait@2x.png" height="2048" width="1536"/>
-        <splash src="res/ios/Default-736h@3x.png" height="2208" width="1242"/>
+        <splash src="res/ios/Default-Portrait-736h@3x.png" height="2208" width="1242"/>
     </platform>
     <icon src="web_hi_res_512.png"/>
     <preference name="Fullscreen" value="true" />
