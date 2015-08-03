@@ -25,7 +25,8 @@
         <button onclick="resetVideos()">Reset Video</button>
         <button onclick="pause()">Pause Video</button>
         <button onclick="resume()">Resume Video</button>
-        <input type="checkbox" onclick="showDeviceId()">Show Device ID's<br>
+        <input id="show-device-id" type="checkbox" onclick="showDeviceId()">
+        <label for="show-device-id">Show Device ID's</label>
         <form id = "uploadForm" enctype =  "multipart/form-data" action = "/upload" method = "post">
             <input type="file" name="userFile" />
             <input type="submit" value="Upload File" name="submit">
