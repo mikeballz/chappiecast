@@ -46,6 +46,7 @@ console.log("websocket server created");
 app.locals.devices = [];
 app.locals.videos = [];
 app.locals.uids = 1;
+app.locals.showIds = false;
 
 deviceSocket.on("connection", function(ws) {
   console.log("websocket connection open");
@@ -61,7 +62,7 @@ deviceSocket.on("connection", function(ws) {
       // set initial values
       var newDevice = deviceFromInitialValues(data.initialValues);
       app.locals.devices.push(newDevice);
-      send({newId: socketId, video: app.locals.selectedVideo});
+      send({newId: socketId, video: app.locals.selectedVideo, showIds: app.locals.showIds});
     }
   };
 
@@ -104,7 +105,7 @@ controlSocket.on('connection', function(ws){
   fs.readdir('./uploads',function(err,files){
     if(err) throw err;
     app.locals.videos = files;
-    send({videos: app.locals.videos, selectedVideo: app.locals.selectedVideo});
+    send({videos: app.locals.videos, selectedVideo: app.locals.selectedVideo, showIds: app.locals.showIds});
   });
 
   ws.onmessage = function(event){
@@ -123,7 +124,11 @@ controlSocket.on('connection', function(ws){
     } else if (data == 'resume') {
       broadcastToDevices('resume')
     } else if (data == 'show ids') {
+      app.locals.showIds = true;
       broadcastToDevices('show ids')
+    } else if (data == 'hide ids') {
+      app.locals.showIds = false;
+      broadcastToDevices('hide ids')
     } else if (data.video) {
       app.locals.selectedVideo = data.video;
       resetDeviceScale();

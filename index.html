@@ -23,13 +23,14 @@
       #device-id{
         display:none;
         position: absolute;
-        top: 45%;
+        top: 40%;
         left: 45%;
         z-index: 200;
         color: white;
         font-size: 8em;
         font-weight: bold;
         font-family: sans-serif;
+        -webkit-text-stroke: 3px black;
       }
 
       video {
@@ -64,6 +65,13 @@
           deviceIdText.innerHTML = data.newId;
           state.id = data.newId;
           if (data.video) { videoElement.src = 'uploads/' + data.video; }
+
+          if (data.showIds) {
+            deviceIdText.style.display = 'block';
+          } else {
+            deviceIdText.style.display = 'none';
+          }
+          
         } else if ((data.deviceId == state.id || data.deviceId =='all') && data.changes) {
           if (data.changes.position) {
             state.top = videoElement.style.top = (data.changes.position.top * state.scale);
@@ -87,11 +95,9 @@
         } else if (data == 'resume') {
           videoElement.play();
         } else if (data == 'show ids') {
-          if (deviceIdText.style.display == 'block') {
-            deviceIdText.style.display = 'none';
-          } else {
-            deviceIdText.style.display = 'block';
-          }
+          deviceIdText.style.display = 'block';
+        } else if (data == 'hide ids') {
+          deviceIdText.style.display = 'none';
         } else if (data.video) {
           videoElement.src = 'uploads/' + data.video;
           setVideoScale(DEFAULT_SCALE)

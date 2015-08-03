@@ -23,6 +23,19 @@
         height:100%;
       }
 
+      #device-id{
+        display:none;
+        position: absolute;
+        top: 40%;
+        left: 45%;
+        z-index: 200;
+        color: white;
+        font-size: 8em;
+        font-weight: bold;
+        font-family: sans-serif;
+        -webkit-text-stroke: 3px black;
+      }
+
       video {
         position: absolute;
         transform-origin: top left;
@@ -49,11 +62,19 @@
 
       ws.onmessage = function (event) {
         var data = JSON.parse(event.data),
-        videoElement = document.querySelector('video');
+        videoElement = document.querySelector('video'),
+        deviceIdText = document.getElementById('device-id');
 
         if (data.newId) {
+          deviceIdText.innerHTML = data.newId;
           state.id = data.newId;
           if (data.video) { videoElement.src = 'http://192.168.1.44:5000/uploads/' + data.video; }
+          if (data.showIds) {
+            deviceIdText.style.display = 'block';
+          } else {
+            deviceIdText.style.display = 'none';
+          }
+
         } else if ((data.deviceId == state.id || data.deviceId =='all') && data.changes) {
           if (data.changes.position) {
             state.top = videoElement.style.top = (data.changes.position.top * state.scale);
@@ -77,11 +98,9 @@
         } else if (data == 'resume') {
           videoElement.play();
         } else if (data == 'show ids') {
-          if (deviceIdText.style.display == 'block') {
-            deviceIdText.style.display = 'none';
-          } else {
-            deviceIdText.style.display = 'block';
-          }
+          deviceIdText.style.display = 'block';
+        } else if (data == 'hide ids') {
+          deviceIdText.style.display = 'none';
         } else if (data.video) {
           videoElement.src = 'http://192.168.1.44:5000/uploads/' + data.video;
           setVideoScale(DEFAULT_SCALE)
@@ -110,6 +129,7 @@
   <body>
     <div id="frame">
       <div id="video-container">
+        <span id="device-id"></span>
         <video muted autoplay loop webkit-playsinline></video>
       </div>
     </div>
