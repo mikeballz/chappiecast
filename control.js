@@ -56,7 +56,6 @@ $(function () {
                         left: (-device.position.left || 0) + 'px'
                     })
                     .draggable({
-                        containment: 'parent',
                         stop: function (event, ui) {
                             send({
                                 deviceId: device.id,
