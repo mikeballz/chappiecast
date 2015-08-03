@@ -20,17 +20,27 @@
         height:100%;
       }
 
-      #device-id{
-        display:none;
+      .id-container{
+        text-align: center;
+        width: 100%;
         position: absolute;
-        top: 40%;
-        left: 45%;
+        height: 100%;
+        vertical-align: middle;
+        z-index: 200;
+      }
+
+      #device-id{
+        display: none;
         z-index: 200;
         color: white;
+        vertical-align: middle;
         font-size: 8em;
         font-weight: bold;
         font-family: sans-serif;
         -webkit-text-stroke: 3px black;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
       }
 
       video {
@@ -126,7 +136,9 @@
   <body>
     <div id="frame">
       <div id="video-container">
-        <span id="device-id"></span>
+        <div class="id-container">
+          <span id="device-id"></span>
+        </div>
         <video muted autoplay loop></video>
       </div>
     </div>
