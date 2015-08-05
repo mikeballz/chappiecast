@@ -8,7 +8,6 @@ $(function () {
     var selectedVideo;
     var ratio = 2;
     var showDeviceIds = false;
-    var deviceIdCheckbox = document.querySelector('input[type="checkbox"]');
 
     $('.video-frame').resizable({
         aspectRatio: true,
@@ -40,10 +39,10 @@ $(function () {
             }
             setVideoSource(videoSelector.val());
 
-            if (data.showIds){
-                persistCheckboxValue(data.showIds);
+            if (data.hasOwnProperty('showIds')){
+                setCheckboxValue(data.showIds);
             }
-        } else if (data.devices) {
+        } else if (data.devices.length > 0) {
             $.each(data.devices, function (index, device) {
                 var newElement = document.createElement('div');
                 $('.video-frame').append(newElement);
@@ -101,35 +100,41 @@ $(function () {
         ws.send(JSON.stringify(text));
     }
 
-    window.resetVideos = function resetVideos () {
+    function resetVideos () {
         videoElement.currentTime = 0;
         send('reset');
-    };
+    }
 
-    window.pause = function pause () {
+    $('#reset-button').click(resetVideos);
+
+    function pause () {
         videoElement.pause();
         send('pause');
-    };
+    }
 
-    window.resume = function resume () {
+    $('#pause-button').click(pause);
+
+    function resume () {
         videoElement.play();
         send('resume');
-    };
+    }
 
-    window.showDeviceId = function () {
-        if (deviceIdCheckbox.checked){
+    $('#resume-button').click(resume);
+
+    function toggleDeviceId() {
+        if (this.checked){
             showDeviceIds = true;
             send('show ids');
         } else {
             showDeviceIds = false;
             send('hide ids');
         }
-    };
+    }
 
-    function persistCheckboxValue(showDeviceIds) {
-        if (showDeviceIds){
-            deviceIdCheckbox.checked = true;
-        }
+    $('#show-device-id').change(toggleDeviceId);
+
+    function setCheckboxValue(showDeviceIds) {
+        $('#show-device-id').prop('checked',showDeviceIds);
     }
 
     //Populate video dropdown
