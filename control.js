@@ -7,6 +7,8 @@ $(function () {
     var originalVideoWidth;
     var selectedVideo;
     var ratio = 2;
+    var showDeviceIds = false;
+    var deviceIdCheckbox = document.querySelector('input[type="checkbox"]');
 
     $('.video-frame').resizable({
         aspectRatio: true,
@@ -37,6 +39,10 @@ $(function () {
                 send({video: videoSelector.val()});
             }
             setVideoSource(videoSelector.val());
+
+            if (data.showIds){
+                persistCheckboxValue(data.showIds);
+            }
         } else if (data.devices) {
             $.each(data.devices, function (index, device) {
                 var newElement = document.createElement('div');
@@ -50,7 +56,6 @@ $(function () {
                         left: (-device.position.left || 0) + 'px'
                     })
                     .draggable({
-                        containment: 'parent',
                         stop: function (event, ui) {
                             send({
                                 deviceId: device.id,
@@ -110,6 +115,22 @@ $(function () {
         videoElement.play();
         send('resume');
     };
+
+    window.showDeviceId = function () {
+        if (deviceIdCheckbox.checked){
+            showDeviceIds = true;
+            send('show ids');
+        } else {
+            showDeviceIds = false;
+            send('hide ids');
+        }
+    };
+
+    function persistCheckboxValue(showDeviceIds) {
+        if (showDeviceIds){
+            deviceIdCheckbox.checked = true;
+        }
+    }
 
     //Populate video dropdown
     function populateSelectVideo(allVideos, currentVideo) {
