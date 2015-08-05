@@ -1,6 +1,6 @@
 {
-  "name": "ws-video-multicast",
-  "version": "0.2.0",
+  "name": "chappiecast",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "express": "^4.4.5",
