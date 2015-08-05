@@ -7,6 +7,18 @@
     </feature>
     <allow-intent href="market:*" />
     <preference name="AllowInlineMediaPlayback" value="true" />
+    <icon density="hdpi" src="res/android/icon-hdpi.png" />
+    <icon density="ldpi" src="res/android/icon-ldpi.png" />
+    <icon density="mdpi" src="res/android/icon-mdpi.png" />
+    <icon density="xhdpi" src="res/android/icon-xhdpi.png" />
+    <icon density="xxhdpi" src="res/android/icon-xxhdpi.png" />
+    <icon density="xxxhdpi" src="res/android/icon-xxxhdpi.png" />
+    <splash density="port-hdpi" src="res/android/splash-hdpi.png" />
+    <splash density="port-ldpi" src="res/android/splash-ldpi.png" />
+    <splash density="port-mdpi" src="res/android/splash-mdpi.png" />
+    <splash density="port-xhdpi" src="res/android/splash-xhdpi.png" />
+    <splash density="port-xxhdpi" src="res/android/splash-xxhdpi.png" />
+    <splash density="port-xxxhdpi" src="res/android/splash-xxxhdpi.png" />
     <name>ChappieCast</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.

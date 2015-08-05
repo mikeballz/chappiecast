@@ -18,6 +18,16 @@
     <allow-intent href="itms-apps:*" />
     <preference name="AllowInlineMediaPlayback" value="true" />
     <preference name="BackupWebStorage" value="local" />
+    <icon height="60" src="res/ios/appicon-60.png" width="60" />
+    <icon height="120" src="res/ios/appicon-60@2x.png" width="120" />
+    <icon height="180" src="res/ios/appicon-60@3x.png" width="180" />
+    <splash height="480" src="res/ios/Default.png" width="320" />
+    <splash height="960" src="res/ios/Default@2x.png" width="640" />
+    <splash height="1136" src="res/ios/Default-568h@2x.png" width="640" />
+    <splash height="1334" src="res/ios/Default-667h@2x.png" width="750" />
+    <splash height="1024" src="res/ios/Default-Portrait.png" width="768" />
+    <splash height="2048" src="res/ios/Default-Portrait@2x.png" width="1536" />
+    <splash height="2208" src="res/ios/Default-Portrait-736h@3x.png" width="1242" />
     <name>ChappieCast</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
@@ -34,4 +44,6 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <icon src="web_hi_res_512.png" />
+    <preference name="Fullscreen" value="true" />
+    <preference name="Orientation" value="portrait" />
 </widget>
