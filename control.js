@@ -1,22 +1,22 @@
 $(function () {
     var host = location.origin.replace(/^http/, 'ws');
     var ws = new WebSocket(host + '/control');
-    var scale = 2;
+    var DEFAULT_SCALE = 2;
+    var scale = DEFAULT_SCALE;
     var videoSelector = $('#select-video');
     var videoElement = document.querySelector('video');
     var originalVideoWidth;
     var selectedVideo;
-    var ratio = 2;
     var showDeviceIds = false;
 
     $('.video-frame').resizable({
         aspectRatio: true,
         stop: function (event, ui) {
-            ratio = (ui.size.width / originalVideoWidth) * 2;
+            var scale = ((ui.size.width / originalVideoWidth) * DEFAULT_SCALE).toFixed(2);
             send({
                 deviceId: 'all',
                 changes: {
-                    scale: ratio
+                    scale: scale
                 }
             });
         }
@@ -24,8 +24,8 @@ $(function () {
 
     videoElement.onloadedmetadata = function () {
         originalVideoWidth = this.videoWidth;
-        var width = this.videoWidth * (scale / 2);
-        var height = this.videoHeight * (scale / 2);
+        var width = this.videoWidth * (scale / DEFAULT_SCALE);
+        var height = this.videoHeight * (scale / DEFAULT_SCALE);
         $('.video-frame').css('width', width).css('height', height);
     };
 
@@ -91,7 +91,7 @@ $(function () {
 
             function setToScale(idx, value) {
                 value = parseFloat(value);
-                return value * (scale / 2);
+                return value * (scale / DEFAULT_SCALE);
             }
         }
     };
@@ -157,7 +157,7 @@ $(function () {
         var newVideo = $(this).val();
         if (selectedVideo !== newVideo) {
             selectedVideo = newVideo;
-            scale = 2;
+            scale = DEFAULT_SCALE;
             setVideoSource(newVideo);
             send({video: newVideo});
         }
