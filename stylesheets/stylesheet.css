@@ -56,10 +56,20 @@ a {
 
 .installsteps {font-size: 1.5em;}
 
-.movieblock div {background-color: #F16521; background-size: cover;}
+
+
+.movieblock, x:-moz-any-link, x:default{background: #F16521; background-size: cover;}
+
+
+body:not(:-moz-handler-blocked) .movieblock {
+    background: #F16521;
+  }
+
+.movieblock {background: #fd7a1c; background-size: cover;}
 
 .movie{
   display: block;
+  background: #F16521;
   margin: 0 auto;
   z-index: -100;
   text-align: center;
